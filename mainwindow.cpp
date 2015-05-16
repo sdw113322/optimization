@@ -36,5 +36,6 @@ void MainWindow::on_pushButton_clicked()
         ui->textBrowser->append(QString::number(a.p[i].z));
         ui->textBrowser->append("\n");
         ui->textBrowser->append("\n");
+        ui->textBrowser->append(QString::number(a.eval(1,2,3)));
     }
 }

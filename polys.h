@@ -21,9 +21,10 @@ public:
     Polys(string input);
     ~Polys();
     vector<poly> p;
+    double eval(double x,double y,double z);
 private:
     //vector<poly> p;
-    void pop(string& s,int& i,double &n);
+    void pop(string& s, int& i, double &n, int mode);
     void parse(string& s, vector<poly>& p);
 };
 
