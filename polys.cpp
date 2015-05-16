@@ -84,6 +84,7 @@ void Polys::parse(string &s, vector<poly> &p){
     }
 }
 
+//求值
 double Polys::eval(double x,double y,double z){
     double result = 0;
     for(int i=0;i<p.size();i++){
