@@ -7,6 +7,12 @@ using namespace std;
 
 struct poly{
 double c,x,y,z;
+poly(){
+    c = 0;
+    x = 0;
+    y = 0;
+    z = 0;
+}
 };
 
 class Polys
@@ -14,10 +20,11 @@ class Polys
 public:
     Polys(string input);
     ~Polys();
-private:
     vector<poly> p;
-    void pop(string& s,int& i,int &n);
-    void parse(string& s, vector<poly>& p, int& n);
+private:
+    //vector<poly> p;
+    void pop(string& s,int& i,double &n);
+    void parse(string& s, vector<poly>& p);
 };
 
 #endif // POLYS_H
