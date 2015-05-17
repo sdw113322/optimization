@@ -36,9 +36,19 @@ MainWindow::~MainWindow()
 
 void MainWindow::on_pushButton_clicked()
 {
-    QString x = ui->lineEdit->text();
-    string y = x.toStdString();
-    Polys a(y);
-    QString o = PowellOut(powell(a,0.5,0.5,5,0,5,0,0.000001));
+    QString input = ui->lineEdit->text();
+    QString x = ui->lineEdit_2->text();
+    QString y = ui->lineEdit_3->text();
+    QString initial = ui->lineEdit_4->text();
+    std::string::size_type sz;
+    double x_min = std::stod (x.toStdString().substr(1),&sz);
+    double x_max = std::stod (x.toStdString().substr(sz+2));
+    double y_min = std::stod (y.toStdString().substr(1),&sz);
+    double y_max = std::stod (y.toStdString().substr(sz+2));
+    double ix = std::stod (initial.toStdString().substr(1),&sz);
+    double iy = std::stod (initial.toStdString().substr(sz+2));
+    string str = input.toStdString();
+    Polys a(str);
+    QString o = PowellOut(powell(a,ix,iy,x_max,x_min,y_max,y_min,0.000001));
     ui->textBrowser->append(o);
 }

@@ -105,6 +105,15 @@ vector<array<double,8> > powell(Polys& p,double x,double y,double x_max,double x
     return record;
 }
 
+void qussi(Polys& p,double x,double y,double x_max,double x_min,double y_max,double y_min,double tau){
+    array<array<double,2>,2> h;
+    h[0][0] = 1;
+    h[0][1] = 0;
+    h[1][0] = 0;
+    h[1][1] = 1;
+
+}
+
 double goldenp(Polys& p,double a, double b, double c, double tau){//a跟c是左右bound,b是中間的一個值, tau應該是區間誤差
     double x;
     const double phi = (1+(double)sqrt((double)5))/2;

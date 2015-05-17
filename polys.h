@@ -2,6 +2,7 @@
 #define POLYS_H
 #include <vector>
 #include <string>
+#include <array>
 
 using namespace std;
 
@@ -26,6 +27,7 @@ public:
     void createSuber(double xc,double xa,double yc,double ya);
     double evalSuber(double a);
     void deleteSuber();
+    array<double,2> gradient(double x,double y);
 private:
     //vector<poly> p;
     poly subx,suby;

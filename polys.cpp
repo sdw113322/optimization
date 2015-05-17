@@ -115,3 +115,11 @@ void Polys::deleteSuber(){
     suby.c = 0;
     suby.x = 0;
 }
+
+array<double,2> Polys::gradient(double x,double y){
+    double h = 0.000001;
+    array<double,2> result;
+    result[0] = (eval(x+h,y,0)-eval(x-h,y,0))/(2*h);
+    result[1] = (eval(x,y+h,0)-eval(x,y-h,0))/(2*h);
+    return result;
+}
