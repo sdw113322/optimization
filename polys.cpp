@@ -123,3 +123,39 @@ array<double,2> Polys::gradient(double x,double y){
     result[1] = (eval(x,y+h,0)-eval(x,y-h,0))/(2*h);
     return result;
 }
+
+double Polys::dx (double x,double y){
+    double h = 0.000001;
+    return (eval(x+h,y,0)-eval(x-h,y,0))/(2*h);
+}
+double Polys::dy (double x,double y){
+    double h = 0.000001;
+    return (eval(x,y+h,0)-eval(x,y-h,0))/(2*h);
+}
+double Polys::dxx (double x,double y){
+    double h = 0.000001;
+    return (dx(x+h,y)-dx(x-h,y))/(2*h);
+}
+double Polys::dyy (double x,double y){
+    double h = 0.000001;
+    return (dy(x,y+h)-dy(x,y-h))/(2*h);
+}
+double Polys::dxy (double x,double y){
+    double h = 0.000001;
+    return (dx(x,y+h)-dx(x,y-h))/(2*h);
+}
+double Polys::dyx (double x,double y){
+    double h = 0.000001;
+    return (dy(x+h,y)-dy(x-h,y))/(2*h);
+}
+
+array<array<double,2>,2> Polys::hessian(double x,double y){
+    double h = 0.001;
+    array<array<double,2>,2> result;
+
+    result[0][0] = dxx(x,y);
+    result[0][1] = dxy(x,y);
+    result[1][0] = dyx(x,y);
+    result[1][1] = dyy(x,y);
+    return result;
+}

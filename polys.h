@@ -28,6 +28,13 @@ public:
     double evalSuber(double a);
     void deleteSuber();
     array<double,2> gradient(double x,double y);
+    array<array<double,2>,2> hessian(double x,double y);
+    double dx (double x,double y);
+    double dy (double x,double y);
+    double dxx (double x,double y);
+    double dxy (double x,double y);
+    double dyx (double x,double y);
+    double dyy (double x,double y);
 private:
     //vector<poly> p;
     poly subx,suby;

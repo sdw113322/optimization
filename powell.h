@@ -308,6 +308,36 @@ vector<array<double,6> > steep(Polys& p,double x,double y,double x_max,double x_
     return record;
 }
 
+vector<array<double,6> > newton(Polys& p,double x,double y,double x_max,double x_min,double y_max,double y_min,double tau){
+    //record
+    vector<array<double,6> > record;
+    double dx,dy;
+    int i=0;
+    do{
+        array<double,2> g = p.gradient(x,y);
+        array<double,6> tmpr;
+        tmpr[0] = i;
+        tmpr[1] = x;
+        tmpr[2] = y;
+        tmpr[3] = g[0];
+        tmpr[4] = g[1];
+        tmpr[5] = p.eval(x,y,0);
+        record.push_back(tmpr);
+        array<array<double,2>,2> h = p.hessian(x,y),hi;
+        hi[0][0] = h[1][1]/(h[0][0]*h[1][1]-h[1][0]*h[0][1]);
+        hi[0][1] = -h[0][1]/(h[0][0]*h[1][1]-h[1][0]*h[0][1]);
+        hi[1][0] = -h[1][0]/(h[0][0]*h[1][1]-h[1][0]*h[0][1]);
+        hi[1][1] = h[0][1]/(h[0][0]*h[1][1]-h[1][0]*h[0][1]);
+        dx = -(hi[0][0]*g[0]+hi[0][1]*g[1]);
+        dy = -(hi[1][0]*g[0]+hi[1][1]*g[1]);
+        x = x +dx;
+        y = y +dy;
+        i++;
+    }while(abs(dx)>tau&&i<200);
+
+    return record;
+}
+
 double golden(vector<array<double,5> >& record,Polys& p,double a, double b, double c, double tau){//a跟c是左右bound,b是中間的一個值, tau應該是區間誤差
     double x;
     const double phi = (1+sqrt((double)5))/2;
