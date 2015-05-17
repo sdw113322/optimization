@@ -39,4 +39,5 @@ void MainWindow::on_pushButton_clicked()
         ui->textBrowser->append("\n");
         ui->textBrowser->append(QString::number(a.eval(1,2,3)));
     }
+    powell(a,0.5,0.5,5,0,5,0,0.00000000001);
 }

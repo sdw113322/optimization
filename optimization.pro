@@ -14,8 +14,7 @@ TEMPLATE = app
 
 SOURCES += main.cpp\
         mainwindow.cpp \
-    polys.cpp \
-    powell.cpp
+    polys.cpp
 
 HEADERS  += mainwindow.h \
     polys.h \
