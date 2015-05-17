@@ -1,6 +1,7 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 #include "polys.h"
+#include "powell.h"
 #include <string>
 
 using namespace std;

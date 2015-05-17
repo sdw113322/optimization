@@ -14,9 +14,11 @@ TEMPLATE = app
 
 SOURCES += main.cpp\
         mainwindow.cpp \
-    polys.cpp
+    polys.cpp \
+    powell.cpp
 
 HEADERS  += mainwindow.h \
-    polys.h
+    polys.h \
+    powell.h
 
 FORMS    += mainwindow.ui
