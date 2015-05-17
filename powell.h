@@ -114,6 +114,33 @@ void qussi(Polys& p,double x,double y,double x_max,double x_min,double y_max,dou
 
 }
 
+double golden(vector<array<double,5> >& record,Polys& p,double a, double b, double c, double tau){//a跟c是左右bound,b是中間的一個值, tau應該是區間誤差
+    double x;
+    const double phi = (1+sqrt((double)5))/2;
+    const double resphi = 2-phi;//(3-根號5)/2
+    array<double,5> tmp;
+    tmp[0] = a;
+    tmp[1] = b;
+    tmp[2] = c;
+    tmp[3] = p.eval(b,0,0);
+    tmp[4] = c-a;
+    record.push_back(tmp);
+    if(c-b>b-a){//右側較多
+        x = b + resphi*(c-b);
+    }else{//左側較多
+        x = b - resphi*(b-a);
+    }
+    if(abs(c-a) < tau*(abs(b) + abs(x)))
+        return (c+a)/2;
+    if(p.eval(x,0,0) < p.eval(b,0,0)){
+        if(c-b > b-a)return golden(record,p,b,x,c,tau);
+        else return golden(record,p,a,x,b,tau);
+    }else{
+        if(c-b > b-a)return golden(record,p,a,b,x,tau);
+        else return golden(record,p,x,b,c,tau);
+    }
+}
+
 double goldenp(Polys& p,double a, double b, double c, double tau){//a跟c是左右bound,b是中間的一個值, tau應該是區間誤差
     double x;
     const double phi = (1+(double)sqrt((double)5))/2;
@@ -123,7 +150,7 @@ double goldenp(Polys& p,double a, double b, double c, double tau){//a跟c是左�
     }else{//左側較多
         x = b - resphi*(b-a);
     }
-    if(abs(c-a) < tau*abs(b) + abs(x))
+    if(abs(c-a) < tau*(abs(b) + abs(x)))
         return (c+a)/2;
     if(p.evalSuber(x) < p.evalSuber(b)){
         if(c-b > b-a)return goldenp(p,b,x,c,tau);
