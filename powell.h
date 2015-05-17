@@ -105,13 +105,87 @@ vector<array<double,8> > powell(Polys& p,double x,double y,double x_max,double x
     return record;
 }
 
-void qussi(Polys& p,double x,double y,double x_max,double x_min,double y_max,double y_min,double tau){
+vector<array<double,6> > quasi(Polys& p,double x,double y,double x_max,double x_min,double y_max,double y_min,double tau){
+    //record
+    vector<array<double,6> > record;
     array<array<double,2>,2> h;
+    array<double,2> g = p.gradient(x,y),g2;
+    array<double,2> s,t,u;
+    double x2,y2,dif;
+    int i =0;
     h[0][0] = 1;
     h[0][1] = 0;
     h[1][0] = 0;
     h[1][1] = 1;
-
+    do{
+        array<double,6> tmpr;
+        tmpr[0] = i;
+        tmpr[1] = x;
+        tmpr[2] = y;
+        tmpr[3] = g[0];
+        tmpr[4] = g[1];
+        tmpr[5] = p.eval(x,y,0);
+        record.push_back(tmpr);
+        s[0] = -( h[0][0]*g[0] + h[0][1]*g[1]);
+        s[1] = -( h[1][0]*g[0] + h[1][1]*g[1]);
+        //bound
+        double a;
+        double acand[4];
+        deque<double> acand2;
+        double amax,amin;
+        acand[0] = (x_max - x)/s[0]; //a_x_max
+        acand[1] = (x_min - x)/s[0]; //a_x_min
+        acand[2] = (y_max - y)/s[1]; //a_y_max
+        acand[3] = (y_min - y)/s[1]; //a_y_min
+        for(int k=0;k<2;k++){
+            if(y+acand[k]*s[1]<y_max && y+acand[k]*s[1]>y_min){
+                acand2.push_back(acand[k]);
+            }
+            if(x+acand[k+2]*s[0]<x_max && x+acand[k+2]*s[0]>x_min){
+                acand2.push_back(acand[k+2]);
+            }
+        }
+        if(acand2[0] < acand2[1]){
+            amax = acand2[1];
+            amin = acand2[0];
+        }else{
+            amax = acand2[0];
+            amin = acand2[1];
+        }
+        //search
+        p.createSuber(x,s[0],y,s[1]);
+        a = goldenp(p,amin,(amin+amax)/2,amax,tau);
+        //iteration
+        x2 = x+a*s[0];
+        y2 = y+a*s[1];
+        g2 = p.gradient(x2,y2);
+        //dfp
+        t[0] = x2-x;
+        t[1] = y2-y;
+        u[0] = g2[0]-g[0];
+        u[1] = g2[1]-g[1];
+        array<array<double,2>,2> t1,t2;
+        t1[0][0] = t[0]*t[0]/(t[0]*u[0]+t[1]*u[1]);
+        t1[0][1] = t[0]*t[1]/(t[0]*u[0]+t[1]*u[1]);
+        t1[1][0] = t[0]*t[1]/(t[0]*u[0]+t[1]*u[1]);
+        t1[1][1] = t[1]*t[1]/(t[0]*u[0]+t[1]*u[1]);
+        double t3 = h[0][0]*t[0]+h[0][1]*t[1];
+        double t4 = h[1][0]*t[0]+h[1][1]*t[1];
+        t2[0][0] = t3*t3/(t[0]*t3+t[1]*t4);
+        t2[0][1] = t3*t4/(t[0]*t3+t[1]*t4);
+        t2[1][0] = t3*t4/(t[0]*t3+t[1]*t4);
+        t2[1][1] = t4*t4/(t[0]*t3+t[1]*t4);
+        h[0][0] = h[0][0] + t1[0][0] - t2[0][0];
+        h[0][1] = h[0][1] + t1[0][1] - t2[0][1];
+        h[1][0] = h[1][0] + t1[1][0] - t2[1][0];
+        h[1][1] = h[1][1] + t1[1][1] - t2[1][1];
+        dif = x2-x;
+        x = x2;
+        y = y2;
+        g = g2;
+        i++;
+    }while(dif>tau&&i<50);
+    return record;
 }
 
 double golden(vector<array<double,5> >& record,Polys& p,double a, double b, double c, double tau){//a跟c是左右bound,b是中間的一個值, tau應該是區間誤差
