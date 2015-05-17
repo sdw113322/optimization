@@ -6,6 +6,22 @@
 
 using namespace std;
 
+QString PowellOut(vector<array<double,8> > input){
+    QString result;
+    result += "<table><thead><tr><th>i</th><th>j</th><th>u x</th><th>u y</th><th>alpha</th><th>x</th><th>y</th><th>f(x,y)</th></tr></thead><tbody>";
+    for(int i=0;i<input.size();i++){
+        result += "<tr>";
+        for(int j=0;j<8;j++){
+            result += "<td>";
+            result += QString::number(input[i][j]);
+            result += "</td>";
+        }
+        result += "</tr>";
+    }
+    result += "</tbody></table>";
+    return result;
+}
+
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow)
@@ -23,21 +39,6 @@ void MainWindow::on_pushButton_clicked()
     QString x = ui->lineEdit->text();
     string y = x.toStdString();
     Polys a(y);
-    for(int i=0;i<a.p.size();i++){
-        ui->textBrowser->append("c=");
-        ui->textBrowser->append(QString::number(a.p[i].c));
-        ui->textBrowser->append("\n");
-        ui->textBrowser->append("x=");
-        ui->textBrowser->append(QString::number(a.p[i].x));
-        ui->textBrowser->append("\n");
-        ui->textBrowser->append("y=");
-        ui->textBrowser->append(QString::number(a.p[i].y));
-        ui->textBrowser->append("\n");
-        ui->textBrowser->append("z=");
-        ui->textBrowser->append(QString::number(a.p[i].z));
-        ui->textBrowser->append("\n");
-        ui->textBrowser->append("\n");
-        ui->textBrowser->append(QString::number(a.eval(1,2,3)));
-    }
-    powell(a,0.5,0.5,5,0,5,0,0.00000000001);
+    QString o = PowellOut(powell(a,0.5,0.5,5,0,5,0,0.000001));
+    ui->textBrowser->append(o);
 }

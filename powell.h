@@ -1,18 +1,21 @@
 #ifndef POWELL
 #define POWELL
 
-void powell(Polys& p,double x,double y,double x_max,double x_min,double y_max,double y_min,double tau);
-double goldenp(Polys& p,double a, double b, double c, double tau);
-
 #include "polys.h"
 #include <deque>
 #include <array>
+#include <vector>
 #include <math.h>
 #include <stdio.h>
 
 using namespace std;
 
-void powell(Polys& p,double x,double y,double x_max,double x_min,double y_max,double y_min,double tau){
+vector<array<double,8> > powell(Polys& p,double x,double y,double x_max,double x_min,double y_max,double y_min,double tau);
+double goldenp(Polys& p,double a, double b, double c, double tau);
+
+vector<array<double,8> > powell(Polys& p,double x,double y,double x_max,double x_min,double y_max,double y_min,double tau){
+    //record
+    vector<array<double,8> > record;
     //direction
     deque<array<double,2> > u;
     //initialization
@@ -24,10 +27,27 @@ void powell(Polys& p,double x,double y,double x_max,double x_min,double y_max,do
     //evaluation
     double fv = p.eval(x,y,0);
     double a[3];
-    double before[3] = {fv,x,y};
+
+    {
+        array<double,8> record_tmp;
+        record_tmp[0] = 0;
+        record_tmp[1] = 0;
+        record_tmp[2] = 0;
+        record_tmp[3] = 0;
+        record_tmp[4] = 0;
+        record_tmp[5] = x;
+        record_tmp[6] = y;
+        record_tmp[7] = fv;
+        record.push_back(record_tmp);
+    }
+
     int i=0;
+    double before[3];
 
     do{
+        before[0] = fv;
+        before[1] = x;
+        before[2] = y;
         for(int j=0;j<3;j++){
             if(j==2){
                 array<double,2> u3;
@@ -35,6 +55,12 @@ void powell(Polys& p,double x,double y,double x_max,double x_min,double y_max,do
                 u3[1] = a[0]*u[1][0]+a[1]*u[1][1];
                 u.push_back(u3);
             }
+            //record
+            array<double,8> record_tmp;
+            record_tmp[0] = i;
+            record_tmp[1] = j;
+            record_tmp[2] = u[j][0];
+            record_tmp[3] = u[j][1];
             //bound
             double acand[4];
             deque<double> acand2;
@@ -66,12 +92,17 @@ void powell(Polys& p,double x,double y,double x_max,double x_min,double y_max,do
             y = y+a[j]*u[j][1];
             //evaluation
             fv = p.eval(x,y,0);
-
+            //record
+            record_tmp[4] = a[j];
+            record_tmp[5] = x;
+            record_tmp[6] = y;
+            record_tmp[7] = fv;
+            record.push_back(record_tmp);
         }
         u.pop_front();
         i++;
     }while((fabs(fv-before[0])>tau || fabs(pow(x-before[1],2)+pow(y-before[2],2))>tau) && i<200);
-    printf("%lf\n%lf\n%lf\n",x,y,fv);
+    return record;
 }
 
 double goldenp(Polys& p,double a, double b, double c, double tau){//a跟c是左右bound,b是中間的一個值, tau應該是區間誤差
