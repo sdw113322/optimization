@@ -23,7 +23,7 @@ public:
     vector<poly> p;
     double eval(double x,double y,double z);
     //suber: 將有兩個未知數的式子以特定的式子(ak+b)帶入至x,y中以變為一個未知數的函數
-    void creatSuber(double xc,double xa,double yc,double ya);
+    void createSuber(double xc,double xa,double yc,double ya);
     double evalSuber(double a);
     void deleteSuber();
 private:

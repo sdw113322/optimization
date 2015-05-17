@@ -98,7 +98,7 @@ double Polys::eval(double x,double y,double z){
     return result;
 }
 
-void Polys::creatSuber(double xc,double xa,double yc,double ya){
+void Polys::createSuber(double xc,double xa,double yc,double ya){
     subx.c = xc;
     subx.x = xa;
     suby.c = yc;
