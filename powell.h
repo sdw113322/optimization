@@ -184,7 +184,7 @@ vector<array<double,6> > quasi(Polys& p,double x,double y,double x_max,double x_
         y = y2;
         g = g2;
         i++;
-    }while(dif>tau&&i<200);
+    }while(abs(dif)>tau&&i<200);
     return record;
 }
 
@@ -246,7 +246,65 @@ vector<array<double,7> > conjugate(Polys& p,double x,double y,double x_max,doubl
         y = y2;
         g = g2;
         i++;
-    }while(dif>tau&&i<200);
+    }while(abs(dif)>tau&&i<200);
+    return record;
+}
+
+vector<array<double,6> > steep(Polys& p,double x,double y,double x_max,double x_min,double y_max,double y_min,double tau){
+    //record
+    vector<array<double,6> > record;
+    array<double,2> g = p.gradient(x,y),g2,s;
+    double x2,y2,a,dif;
+    int i=0;
+    s[0] = -g[0];
+    s[1] = -g[1];
+    do{
+        array<double,6> tmpr;
+        tmpr[0] = i;
+        tmpr[1] = x;
+        tmpr[2] = y;
+        tmpr[3] = g[0];
+        tmpr[4] = g[1];
+        tmpr[5] = p.eval(x,y,0);
+        record.push_back(tmpr);
+        //bound
+        double acand[4];
+        deque<double> acand2;
+        double amax,amin;
+        acand[0] = (x_max - x)/s[0]; //a_x_max
+        acand[1] = (x_min - x)/s[0]; //a_x_min
+        acand[2] = (y_max - y)/s[1]; //a_y_max
+        acand[3] = (y_min - y)/s[1]; //a_y_min
+        for(int k=0;k<2;k++){
+            if(y+acand[k]*s[1]<y_max && y+acand[k]*s[1]>y_min){
+                acand2.push_back(acand[k]);
+            }
+            if(x+acand[k+2]*s[0]<x_max && x+acand[k+2]*s[0]>x_min){
+                acand2.push_back(acand[k+2]);
+            }
+        }
+        if(acand2[0] < acand2[1]){
+            amax = acand2[1];
+            amin = acand2[0];
+        }else{
+            amax = acand2[0];
+            amin = acand2[1];
+        }
+        //search
+        p.createSuber(x,s[0],y,s[1]);
+        a = goldenp(p,amin,(amin+amax)/2,amax,tau);
+        //iteration
+        x2 = x+a*s[0];
+        y2 = y+a*s[1];
+        g2 = p.gradient(x2,y2);
+        dif = g2[0]-g[0];
+        x = x2;
+        y = y2;
+        g = g2;
+        s[0] = -g[0];
+        s[1] = -g[1];
+        i++;
+    }while(abs(dif)>tau&&i<200);
     return record;
 }
 
